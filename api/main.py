@@ -1,6 +1,8 @@
 print(f"Importing dependencies")
 from flask import Flask, request, jsonify
 import cv2
+import sys
+import getopt
 import pytesseract
 import time
 import numpy as np 
@@ -136,3 +138,15 @@ def process():
     response = jsonify(payload)
     response.status_code = 200
     return response
+
+if __name__ == "__main__":
+    print(sys.argv)
+    
+    args = sys.argv[1:]
+    host = "127.0.0.1" # default host
+
+    for arg in args:
+        if "host" in arg:
+            host=arg.split("=")[1]
+
+    app.run(host=host)
