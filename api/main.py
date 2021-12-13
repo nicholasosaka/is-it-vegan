@@ -11,8 +11,6 @@ import pickle
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfTransformer, CountVectorizer
 from sklearn.pipeline import Pipeline
-from sklearn.linear_model import LogisticRegression
-
 
 print("Finding best model for classification")
 best_model_name_path = "../models/model.txt"
@@ -84,7 +82,8 @@ def process():
         response.status_code = 400
         return response
     
-    upload_file_name = str(time.time()).split('.')[0] + '.png'
+    upload_file_stem = str(time.time()).split('.')[0]
+    upload_file_name = upload_file_stem + '.png'
     filename = UPLOAD_FOLDER + '/' + upload_file_name
     im_file.save(filename)
     img = Image.open(im_file.stream)
@@ -104,6 +103,8 @@ def process():
     # ocr
     ocr_img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
     ocr_img = cv2.cvtColor(ocr_img, cv2.COLOR_BGR2GRAY)
+
+    Image.fromarray(ocr_img).save(f"{UPLOAD_FOLDER}/intermediate/{upload_file_stem}.png")
     ocr_text = pytesseract.image_to_string(ocr_img)
     ocr_text = ocr_text.strip()
 
@@ -112,7 +113,7 @@ def process():
         cleaned_ocr_text = " ".join(clean_text(ocr_text))
         payload["ocr"] = {
             "text": ocr_text,
-            "cleaned_text": cleaned_ocr_text
+            "cleaned_text": cleaned_ocr_text,
         }
 
 
