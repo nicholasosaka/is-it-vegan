@@ -125,6 +125,7 @@ def process():
 
         prediction_as_str = "vegan" if bool(pred) else "not vegan"
         payload["prediction"] = prediction_as_str
+        print(f"[{TAG}] Prediction: {prediction_as_str}")
         
     else:
         print(f"[{TAG}] No text found.")
